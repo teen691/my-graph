@@ -2,13 +2,17 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-# 1. 상위 5개 영화 추출 (오타 수정: groupby)
+# 1. 데이터 불러오기 (예시: CSV 파일을 읽어오는 경우)
+# 실제 데이터 파일 경로나 생성 방식에 맞게 수정해주세요.
+df = pd.read_csv('movie_data.csv') 
+
+# 2. 상위 5개 영화 추출
 top5_movies = df.groupby('영화명')['일별관객수'].sum().nlargest(5).index
 
-# 2. 데이터 필터링 및 날짜 정렬
+# 3. 데이터 필터링 및 날짜 정렬
 df_top5 = df[df['영화명'].isin(top5_movies)].sort_values('날짜')
 
-# 3. Plotly 선 그래프 생성
+# 4. Plotly 선 그래프 생성
 fig2 = px.line(
     df_top5,
     x='날짜',
@@ -18,7 +22,7 @@ fig2 = px.line(
     labels={'날짜': '날짜', '일별관객수': '일별 관객수(명)', '영화명': '영화 제목'}
 )
 
-# 4. 레이아웃 설정
+# 5. 레이아웃 설정 및 Streamlit 출력
 fig2.update_layout(
     xaxis_title='날짜',
     yaxis_title='일별 관객수',
@@ -26,5 +30,4 @@ fig2.update_layout(
     hovermode='x unified'
 )
 
-# 5. Streamlit 전용 출력 함수 사용
 st.plotly_chart(fig2, use_container_width=True)
